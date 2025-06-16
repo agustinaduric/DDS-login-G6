@@ -22,18 +22,28 @@ public class LoginHandler implements Handler {
 
         LoginRequest loginRequest = context.bodyAsClass(LoginRequest.class);
 
-        Dueño dueño = repoDueños.obtenerJose(); //hardcode: siempre loguea a Jose, se puede ir a buscar a BD o plataformas de SSO
-        System.out.println("Login: " + loginRequest);
-        System.out.println("Login: " + dueño);
-
-        SesionManager sesionManager = SesionManager.get();
-        String idSesion = sesionManager.crearSesion("dueño", dueño);
+        // Dueño dueño = repoDueños.obtenerJose(); //hardcode: siempre loguea a Jose, se puede ir a buscar a BD o plataformas de SSO
+        Dueño dueño = repoDueños.buscarDueñoSegunLogin(loginRequest.getUsername(),loginRequest.getPassword());
+        //System.out.println("Login: " + loginRequest);
+        //System.out.println("Login: " + dueño);
+        //SesionManager sesionManager = SesionManager.get();
+        //String idSesion = sesionManager.crearSesion("dueño", dueño);
 
 //        sesionManager.agregarAtributo(idSesion, "fechaInicio", new Date());
 //        sesionManager.agregarAtributo(idSesion, "rol", repoRoles.getByUser(idUser));
 
-        context.json(new LoginResponse(idSesion));
-
+        //context.json(new LoginResponse(idSesion));
+        if(dueño!=null){
+            System.out.println("Login exitoso: " + loginRequest);
+            System.out.println("Login: " + dueño);
+            SesionManager sesionManager = SesionManager.get();
+            String idSesion = sesionManager.crearSesion("dueño", dueño);
+            context.json(new LoginResponse(idSesion));
+            context.status(200);
+        } else{
+            System.out.println("Error en el login: " + loginRequest);
+            context.status(400).result("Datos incorrectos");
+        }
     }
 
 }
