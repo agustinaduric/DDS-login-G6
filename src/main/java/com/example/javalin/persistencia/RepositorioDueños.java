@@ -44,4 +44,13 @@ public class RepositorioDueños {
         jose.setMascotas(asList(mimi));
         return jose;
     }
+
+    public Dueño buscarDueñoSegunLogin(String usuario, String contraseña) {
+        for (Dueño dueño : this.obtenerTodos()) {
+            if (dueño.getNombre().equals(usuario) && dueño.getPassword().equals(contraseña)) {
+                return dueño;
+            }
+        }
+        return null;
+    }
 }
